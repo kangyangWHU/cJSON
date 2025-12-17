@@ -5,12 +5,14 @@
 
 mkdir build
 cd build
-cmake -DBUILD_SHARED_LIBS=OFF -DENABLE_CJSON_TEST=OFF ..
+cmake -DBUILD_SHARED_LIBS=OFF -DENABLE_CJSON_TEST=OFF -DENABLE_CJSON_UTILS=ON ..
 make -j$(nproc)
 
 $CXX $CXXFLAGS $SRC/cjson/fuzzing/cjson_read_fuzzer.c -I. \
     -o $OUT/cjson_read_fuzzer \
-    $LIB_FUZZING_ENGINE $SRC/cjson/build/libcjson.a
+    $LIB_FUZZING_ENGINE \
+    $SRC/cjson/build/libcjson_utils.a \
+    $SRC/cjson/build/libcjson.a
 
 find $SRC/cjson/fuzzing/inputs -name "*" | \
      xargs zip $OUT/cjson_read_fuzzer_seed_corpus.zip
